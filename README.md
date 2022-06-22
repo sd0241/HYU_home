@@ -16,7 +16,7 @@
  
  ### 사용 기술 stack
  
- ![image](.//stack.png)
+ ![image](./dataset/stack.png)
 
 
 ### System Architecture  
