@@ -48,8 +48,8 @@
 **pyspark Decision Tree 결과：RMSE(오차) 약 1380만원**  
 ![image](./dataset/rf.png)  
 **pyspark Random Forrest 결과：RMSE(오차) 약 1420만원**
-![image](./dataset/arc.png)
-**pyspark GBT 결과：RMSE(오차) 약 1290만원**
+![image](./dataset/arc.png)   
+**pyspark GBT 결과：RMSE(오차) 약 1290만원**  
 ![image](./dataset/grf.png)
 **grafana 시각화 결과**
 
