@@ -46,7 +46,7 @@
 
 
 ![image](./dataset/res1.png)  
- **kibana 시각화 결과**
+ **kibana 시각화 결과**  
 ![image](./dataset/dt.png)
 **pyspark Decision Tree 결과：RMSE(오차) 약 1380만원**  
 ![image](./dataset/rf.png) 
