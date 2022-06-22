@@ -8,31 +8,52 @@
  리눅스 가상환경(virtualbox)에 빅데이터 파이프라인을 구축 후 부동산 가격예측 및 역세권과 상관관계 추정 
  
  ### 상세 과정
-국토교통부에서 부동산 Data와 공공데이터포탈에서 지하철 역 위치 데이터를 수집하고 서울 열린 데이터 광장에서 Open API로 실시간 거래정보를 가져와 전처리 후 머신러닝 예측을 통해 역세권과 아파트 가격의 상관관계와 미래의 아파트 거래가격을 예측
+ 1. VirtualBox VM에 Linux Centos7 2009ver 64bit 기반으로 설치. - 국토교통부에서 5년간의 부동산 Data와 공공데이터포탈에서 지하철역 위치 Data 수집 하고 서울 열린 데
+이터 광장에서 Open API로 실시간 거래정보를 가져와 python으로 전 처리하여 CSV파일로 저장
+ 2. 전처리된 CSV파일은 MariaDB에 원본(RawData)를 적재하고 실시간 분석을 위한 변환Data는 Flume을 통
+해 Kafka로 전송
+ 3. Kafka에서 Spark로 Data를 전송하고 ML model을 만들어 실시간 분석에 대한 데이터를 생성하여 다시 Kafka에 전송
+ 4. Logstash를 통해 Kafka의 ML 데이터를 받아 ElasticSearch에 전달해 Mapping 확인한 후 Grafana와 Kibana로 데이터 시각화
+ ( ML-model로 집값 상승률 예측과 서울지역의 평당 집값에 대한 위치 시각화 )
  
  ### 사용 기술 stack
  
- ![image](./stack.png)
+ ![image](./dataset/stack.png)
 
 
-### 인원 및 역할
-- 총원 4명 
-- 역할 : 영화 정보 크롤링, 웹 페이지 구현
+### System Architecture  
 
-### 상세 역할
-**< part (1) : 영화 정보 크롤링 >**    
-- beautifulsoup4 활용 영화 제목, 감독, 개봉정보, 줄거리 등 10개 정보 크롤링(2011~2019)
-- 크롤링 한 데이터 csv 형태로 Django 자체 db에 저장  
+ ![image](./dataset/arc.png)    
 
-**< part (2) : 웹 페이지 구현 >**  
-- django 활용 키워드 검색 추천 웹 페이지 구현  
+## 인원 및 역할  
+  - 총원 5명 
+  - 역할 : 파이프라인 구축 및 연동, 데이터 전처리 및 시각화
+## 상세 역할
+  **< part (1) : 데이터 수집 및 전처리 >**  
+  - 국토교통부에서 5년간의 부동산 Data와 공공데이터포탈에서 지하철역 위치 Data 수집하고 서울 
+    열린 데이터 광장에서 Open API로 실시간 거래정보를 가져와 python으로 전처리하여 CSV 파일로 저장
 
-## 프로젝트 결과(썸네일 Click!)
+  **< part (2) : 파이프라인 구축 및 연동 >**    
+  - 데이터 플랫폼 구축 및 연동
+   (mariadb or flume->logstash->kafka->spark->elasticsearch->kibana or grafana)
+ 
+  **< part (3) : 데이터 시각화 >**
+  - Logstash를 통해 Kafka의 ML 데이터를 받아 ElasticSearch에 전달해 Mapping 확인한 Grafana와 Kibana로 데이터 시각화 ( ML-model로 집값 상승률 예측과 서울지역의 평당 집값에 대한 위치 시각화 
 
-[![mv](https://img.youtube.com/vi/AfWimVqh24s/hqdefault.jpg)](https://www.youtube.com/watch?v=AfWimVqh24s)
+## 프로젝트 결과
 
+![image](./dataset/res1.png)  
+ **kibana 시각화 결과**  
+![image](./dataset/dt.png)  
+**pyspark Decision Tree 결과：RMSE(오차) 약 1380만원**  
+![image](./dataset/rf.png)  
+**pyspark Random Forrest 결과：RMSE(오차) 약 1420만원**
+![image](./dataset/arc.png)
+**pyspark GBT 결과：RMSE(오차) 약 1290만원**
+![image](./dataset/grf.png)
+**grafana 시각화 결과**
 
 ### 개선 사항
-- 검색시 속도 문제 해결 필요
-- 웹 서버 배포를 통해 홈페이지 구현
-- 키워드 기반 추천 방식 외에 다른 추천 시스템 방식 도입 
+- 전체 시스템 실시간 자동화를 해내지 못했다. (CronTab or Airflow 시간 부족으로 미사용)   
+- SparkML 실시간 분석 자동화를 시도했으나 구현을 완성하지 못하였다. 
+- ML feature 및 좀 더 분석하고 고민 해볼 시간이 없어서 Model에 대한 완성도가 아쉬웠다.
