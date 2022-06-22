@@ -50,7 +50,7 @@
 **pyspark Random Forrest 결과：RMSE(오차) 약 1420만원**
 ![image](./dataset/arc.png)   
 **pyspark GBT 결과：RMSE(오차) 약 1290만원**  
-![image](./dataset/grf.png)
+![image](./dataset/graf.png)
 **grafana 시각화 결과**
 
 ### 개선 사항
